@@ -2,14 +2,12 @@ import sys
 from typing import Tuple, List
 
 
-def read_input() -> Tuple[List[str], List[str]]:
+def read_input() -> Tuple[str, str, List[str]]:
     """
-    Reads cipher instructions and plaintext sentences from the command line.
+    Reads cipher instructions and plaintext sentences from standard input.
 
     Returns:
-        Tuple[List[str], List[str]]:
-            - A list of cipher specifiers
-            - A list of input sentences to process.
+        Tuple[str, str, List[str]]
     """
     cipher = input().split()
     specifier, key = cipher
@@ -22,14 +20,28 @@ def read_input() -> Tuple[List[str], List[str]]:
     return specifier, key, plaintext
 
 
-def apply_vigenere_key(is_encrypt: bool, key: str, key_index: int, sentence: str):
+def apply_vigenere_key(
+    is_encrypt: bool,
+    key: str,
+    key_index: int,
+    sentence: str
+) -> Tuple[str, int]:
+    """
+    Applies the Vigenère cipher to a sentence.
+
+    Args:
+        is_encrypt (bool)
+        key (str).
+        key_index (int)
+        sentence (str)
+
+    Returns:
+        Tuple[str, int]
+    """
     result = ""
     text_index = 0
 
-    if is_encrypt:
-        sign = 1
-    else:
-        sign = -1
+    sign = 1 if is_encrypt else -1
 
     while text_index < len(sentence):
         cur_letter = sentence[text_index]
@@ -42,16 +54,16 @@ def apply_vigenere_key(is_encrypt: bool, key: str, key_index: int, sentence: str
                 is_upper_case = False
 
             cur_key = key[key_index]
-
             shift = (ord(cur_key) - ord('a')) * sign
 
-            target = chr((ord(cur_letter) - ord('a') + shift) % 26 + ord('a'))
+            target = chr(
+                (ord(cur_letter) - ord('a') + shift) % 26 + ord('a')
+            )
 
             if is_upper_case:
                 target = target.upper()
 
             result += target
-
             key_index = (key_index + 1) % len(key)
         else:
             result += cur_letter
@@ -63,22 +75,20 @@ def apply_vigenere_key(is_encrypt: bool, key: str, key_index: int, sentence: str
 
 def main() -> None:
     """
-    Main program execution:
-        - Reads input
-        - Generates composed cipher mapping
-        - Applies substitution to each sentence
+    Read cipher mode, key, and input text.
+    Determine encryption or decryption mode.
+    Apply Vigenère cipher to each input line.
+    Output the transformed text to standard output.
     """
     specifier, key, plaintext = read_input()
 
-    if specifier == "e":
-        is_encrypt: bool = True
-    else:
-        is_encrypt: bool = False
-
-    key_index = 0
+    is_encrypt: bool = specifier == "e"
+    key_index: int = 0
 
     for sentence in plaintext:
-        result, key_index = apply_vigenere_key(is_encrypt, key, key_index, sentence)
+        result, key_index = apply_vigenere_key(
+            is_encrypt, key, key_index, sentence
+        )
         sys.stdout.write(result)
 
 

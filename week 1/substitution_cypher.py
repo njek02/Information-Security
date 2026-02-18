@@ -7,9 +7,7 @@ def read_input() -> Tuple[List[str], List[str]]:
     Reads cipher instructions and plaintext sentences from the command line.
 
     Returns:
-        Tuple[List[str], List[str]]:
-            - A list of cipher specifiers
-            - A list of input sentences to process.
+        Tuple[List[str], List[str]].
     """
     cipher_str: List[str] = input().split()
     sentences: List[str] = []
@@ -26,10 +24,10 @@ def generate_cipher(cipher_str: List[str]) -> Dict[str, str]:
     of encryption/decryption operations.
 
     Args:
-        cipher_str (List[str]): A list of alternating specifiers and cipher values.
+        cipher_str (List[str])
 
     Returns:
-        Dict[str, str]: Final composed letter substitution mapping.
+        Dict[str, str]
     """
     letter_map: Dict[str, str] = {
         char: char for char in "abcdefghijklmnopqrstuvwxyz"
@@ -59,8 +57,8 @@ def apply_shift(letter_map: Dict[str, str], shift: int) -> None:
     Applies a shift to the values of the current mapping.
 
     Args:
-        letter_map (Dict[str, str]): Current substitution mapping.
-        shift (int): Shift amount (positive for encrypt, negative for decrypt).
+        letter_map (Dict[str, str])
+        shift (int)
     """
     for key in letter_map:
         letter_map[key] = chr(
@@ -78,9 +76,9 @@ def apply_mapping(
     Supports both encryption and decryption.
 
     Args:
-        letter_map (Dict[str, str]): Current substitution mapping.
-        mapping (str): 26-character substitution string.
-        decrypt (bool): Whether to invert the mapping before applying.
+        letter_map (Dict[str, str])
+        mapping (str)
+        decrypt (bool)
     """
     temp_map: Dict[str, str] = dict(zip("abcdefghijklmnopqrstuvwxyz", mapping))
 
@@ -100,8 +98,8 @@ def apply_substitution(
     the transformed text to stdout.
 
     Args:
-        sentence (str): The input sentence.
-        letter_map (Dict[str, str]): Final substitution mapping.
+        sentence (str)
+        letter_map (Dict[str, str])
     """
     target_string: str = ""
 
@@ -121,15 +119,14 @@ def apply_substitution(
 
 def main() -> None:
     """
-    Main program execution:
-        - Reads input
-        - Generates composed cipher mapping
-        - Applies substitution to each sentence
+    Reads input.
+    Generates composed cipher mapping.
+    Applies substitution to each sentence.
     """
-    cipher_str, sentences = read_input()
+    cipher_str, plaintext = read_input()
     letter_map = generate_cipher(cipher_str)
 
-    for sentence in sentences:
+    for sentence in plaintext:
         apply_substitution(sentence, letter_map)
 
 
